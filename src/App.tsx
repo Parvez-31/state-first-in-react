@@ -29,50 +29,84 @@ const App = () => {
     password: "",
   });
 
-  console.log(person);
+  // console.log(person);
 
   //  handler function
-  const handleFirstNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPerson({
-      ...person,
-      firstName: e.target.value,
-    });
-  };
+  //
 
-  const handleLastNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPerson({
       ...person,
-      lastName: e.target.value,
-    });
-  };
-
-  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPerson({
-      ...person,
-      email: e.target.value,
-    });
-  };
-
-  const handlePhoneNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPerson({
-      ...person,
-      phoneNumber: e.target.value,
-    });
-  };
-
-  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPerson({
-      ...person,
-      password: e.target.value,
+      [e.target.name]: e.target.value,
     });
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // validation
+    // first name
+    if (person.firstName.length < 3) {
+      toast.error("Enter more than 2 words in firstName field");
+      return;
+    }
+
+    // last name
+    if (person.lastName.length < 3) {
+      toast.error("Enter more than 2 words in lastName field");
+      return;
+    }
+
+    // email
+    if (person.email.trim() === "") {
+      toast.error("Email is required");
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(person.email)) {
+      toast.error("Please enter a valid email");
+      return;
+    }
+
+    // phone number
+    const phoneRegex = /^[0-9]{10}$/;
+
+    if (!phoneRegex.test(person.phoneNumber)) {
+      toast.error("Enter a valid 10-digit phone number");
+      return;
+    }
+
+    // password
+    if (person.password.length < 8) {
+      toast.error("Password must be at least 8 characters");
+      return;
+    }
+
+    // success msg
+    toast.success("Form submitted successfully!");
     console.log(person);
 
-    toast.success("Successfully toasted!");
+    // clear form
+    setPerson({
+      firstName: "",
+      lastName: "",
+      email: "",
+      phoneNumber: "",
+      password: "",
+    });
+  };
+
+  // reset button
+  const handleReset = () => {
+    setPerson({
+      firstName: "",
+      lastName: "",
+      email: "",
+      phoneNumber: "",
+      password: "",
+    });
+
+    toast.success("Form reset successfully!");
   };
   return (
     <>
@@ -99,7 +133,7 @@ const App = () => {
               <Input
                 placeholder="Enter your first name"
                 value={person.firstName}
-                onChange={handleFirstNameChange}
+                onChange={handleChange}
               />
               <FieldError />
             </TextField>
@@ -111,7 +145,7 @@ const App = () => {
               <Input
                 placeholder="Enter your last name"
                 value={person.lastName}
-                onChange={handleLastNameChange}
+                onChange={handleChange}
               />
               <FieldError />
             </TextField>
@@ -121,21 +155,21 @@ const App = () => {
             <TextField isRequired name="email" type="email">
               <Label>Email</Label>
               <Input
-                placeholder="john@example.com"
+                placeholder="parvez@example.com"
                 value={person.email}
-                onChange={handleEmailChange}
+                onChange={handleChange}
               />
               <FieldError />
             </TextField>
 
             {/* phone number */}
 
-            <TextField isRequired name="phone" type="text">
+            <TextField isRequired name="phoneNumber" type="tel">
               <Label>Phone Number</Label>
               <Input
-                placeholder="+91 9876543210"
+                placeholder="+91 6296536872"
                 value={person.phoneNumber}
-                onChange={handlePhoneNumberChange}
+                onChange={handleChange}
               />
               <FieldError />
             </TextField>
@@ -148,13 +182,10 @@ const App = () => {
               <Input
                 placeholder="Enter your password"
                 value={person.password}
-                onChange={handlePasswordChange}
+                onChange={handleChange}
               />
 
-              <Description>
-                Must contain at least 8 characters, 1 uppercase letter and 1
-                number
-              </Description>
+              <Description>Password must be at least 8 characters.</Description>
 
               <FieldError />
             </TextField>
@@ -166,16 +197,16 @@ const App = () => {
                 Submit
               </Button>
 
-              <Button className="w-full" type="reset" variant="danger-soft">
+              <Button
+                className="w-full"
+                type="button"
+                variant="danger-soft"
+                onPress={handleReset}
+              >
                 Reset
               </Button>
             </div>
           </Form>
-          <p>
-            {person.firstName}
-            {person.lastName}
-            {person.email}
-          </p>
         </div>
       </div>
     </>
