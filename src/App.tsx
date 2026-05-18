@@ -7,18 +7,10 @@ import {
   Label,
   TextField,
 } from "@heroui/react";
-
+import type { Person } from "./typescript/interface/person.interface";
 import "./App.css";
 import { useState, type ChangeEvent } from "react";
 import toast, { Toaster } from "react-hot-toast";
-
-interface Person {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  password: string;
-}
 
 const App = () => {
   const [person, setPerson] = useState<Person>({
@@ -31,9 +23,6 @@ const App = () => {
 
   // console.log(person);
 
-  //  handler function
-  //
-
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPerson({
       ...person,
@@ -41,6 +30,7 @@ const App = () => {
     });
   };
 
+  // handler function
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
